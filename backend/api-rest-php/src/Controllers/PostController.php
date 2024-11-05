@@ -64,4 +64,71 @@ class PostController
             echo json_encode(["message" => "Post could not be created."]);
         }
     }
+
+    // Lire tous les posts
+    public function readAllPosts()
+    {
+        $result = $this->postModel->readAll();
+        if ($result) {
+            http_response_code(200);
+            echo json_encode($result);
+        } else {
+            http_response_code(404);
+            echo json_encode(["message" => "No posts found."]);
+        }
+    }
+
+    // Lire un seul post par ID
+    public function readSinglePost($id)
+    {
+        $this->postModel->PostID = $id;
+        $result = $this->postModel->readOne();
+        if ($result) {
+            http_response_code(200);
+            echo json_encode($result);
+        } else {
+            http_response_code(404);
+            echo json_encode(["message" => "Post not found."]);
+        }
+    }
+
+    // Mettre à jour un post
+    public function updatePost($id)
+    {
+        $inputJSON = file_get_contents('php://input');
+        $data = json_decode($inputJSON, true);
+
+        $caption = isset($data['caption']) ? htmlspecialchars(strip_tags($data['caption'])) : null;
+
+        if (!$caption) {
+            http_response_code(400);
+            echo json_encode(["message" => "Caption is required."]);
+            return;
+        }
+
+        $this->postModel->PostID = $id;
+        $this->postModel->Caption = $caption;
+
+        $result = $this->postModel->update();
+        if ($result) {
+            http_response_code(200);
+            echo json_encode($result);
+        } else {
+            http_response_code(500);
+            echo json_encode(["message" => "Post could not be updated."]);
+        }
+    }
+
+    // Supprimer un post
+    public function deletePost($id)
+    {
+        $this->postModel->PostID = $id;
+        if ($this->postModel->delete()) {
+            http_response_code(200);
+            echo json_encode(["message" => "Post deleted successfully."]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["message" => "Post could not be deleted."]);
+        }
+    }
 }

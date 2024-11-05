@@ -56,4 +56,70 @@ class Post
             return false;
         }
     }
+
+    // Lire tous les posts
+    public function readAll()
+    {
+        try {
+            $query = "SELECT PostID, UserID, Caption, CreatedAt FROM " . $this->table . " ORDER BY CreatedAt DESC";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error Post.php readAll() : " . $e->getMessage();
+            return false;
+        }
+    }
+
+    // Lire un seul post par son ID
+    public function readOne()
+    {
+        try {
+            $query = "SELECT PostID, UserID, Caption, CreatedAt FROM " . $this->table . " WHERE PostID = :postID";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':postID', $this->PostID);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error Post.php readOne() : " . $e->getMessage();
+            return false;
+        }
+    }
+
+    // Mettre à jour un post
+    public function update()
+    {
+        try {
+            $query = "UPDATE " . $this->table . " SET Caption = :caption WHERE PostID = :postID";
+            $stmt = $this->conn->prepare($query);
+
+            $stmt->bindParam(':caption', $this->Caption);
+            $stmt->bindParam(':postID', $this->PostID);
+
+            if ($stmt->execute()) {
+                return $this->readOne();
+            }
+            return false;
+        } catch (PDOException $e) {
+            echo "Error Post.php update() : " . $e->getMessage();
+            return false;
+        }
+    }
+
+    // Supprimer un post
+    public function delete()
+    {
+        try {
+            $query = "DELETE FROM " . $this->table . " WHERE PostID = :postID";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':postID', $this->PostID);
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Error Post.php delete() : " . $e->getMessage();
+            return false;
+        }
+    }
 }
