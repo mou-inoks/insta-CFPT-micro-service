@@ -1,0 +1,10 @@
+{
+    "name": "api/cfpt",
+    "description": "instacfpt",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {}
+}
