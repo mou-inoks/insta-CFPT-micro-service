@@ -3,13 +3,11 @@ import React, { FormEvent, useState, useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Textarea } from "@/components/ui/textarea";
 import { Heart, Home, Image as ImageIcon, MessageCircle, PlusSquare, Search, Send } from 'lucide-react';
 import { fetchPosts, createPost, likePost, Post } from '@/app/service/postService';
+import Header from '@/components/Header';
 
 export default function Component() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -39,57 +37,11 @@ export default function Component() {
     }));
   };
 
-  const handleNewPost = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const caption = formData.get('caption') as string;
-
-    const newPost = await createPost('currentuser', '/placeholder.svg?height=500&width=500', caption);
-    setPosts((prev) => [newPost, ...prev]);
-    setLikes((prev) => ({ ...prev, [newPost.id]: 0 }));
-  };
-
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <header className="sticky top-0 z-10 bg-white border-b">
-        <div className="container flex items-center justify-between h-16 px-4 mx-auto max-w-screen-xl">
-          <div className="text-2xl font-bold">Instagram</div>
-          <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="icon">
-              <Home className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <MessageCircle className="h-5 w-5" />
-            </Button>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <PlusSquare className="h-5 w-5" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Create new post</DialogTitle>
-                </DialogHeader>
-                <form onSubmit={handleNewPost} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="caption">Caption</Label>
-                    <Textarea id="caption" name="caption" placeholder="Write a caption..." />
-                  </div>
-                  <Button type="submit">Post</Button>
-                </form>
-              </DialogContent>
-            </Dialog>
-            <Button variant="ghost" size="icon">
-              <Search className="h-5 w-5" />
-            </Button>
-            <Avatar>
-              <AvatarImage src="/placeholder-user.jpg" alt="@username" />
-              <AvatarFallback>UN</AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
-      </header>
+
+      <Header setLikes={setLikes} setPosts={setPosts}/>
+
       <main className="flex-grow container mx-auto px-4 py-8 max-w-screen-xl">
         <div className="flex flex-col md:flex-row gap-8">
           <div className="flex-grow space-y-6 md:w-2/3">
@@ -164,7 +116,7 @@ export default function Component() {
               </CardContent>
             </Card>
             <div className="text-sm text-gray-500">
-              © 2023 Instagram Clone • Not a real app
+              © 2023 Instagram Clone • Not a real app from Salim
             </div>
           </aside>
         </div>

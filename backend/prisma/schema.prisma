@@ -17,7 +17,7 @@ model Comment {
   CreatedAt  DateTime @db.Timestamp(6) @default(now())
   
   Post       Post     @relation(fields: [PostID], references: [PostID])
-  User       User     @relation(fields: [UserID], references: [UserID])
+  User       User     @relation(fields: [UserID], references: [UserID], name: "UserComments")
 }
 
 model Follow {
@@ -57,7 +57,7 @@ model Post {
   Caption   String?  
   CreatedAt DateTime @db.Timestamp(6) @default(now())
 
-  User      User     @relation(fields: [UserID], references: [UserID])
+  User      User     @relation(fields: [UserID], references: [UserID], name: "UserPosts")
   Comments  Comment[]
   Likes     Like[]
   Photos    Photo[]
