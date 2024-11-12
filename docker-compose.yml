@@ -1,52 +1,58 @@
+version: "3.8"
+
 services:
   backend:
-    build: ./backend/api-rest-php
+    build:
+      context: ./backend   # Le chemin vers le répertoire du backend
+      dockerfile: Dockerfile # Nom du Dockerfile du backend
     container_name: backend
     ports:
-      - "8080:80"
-    volumes:
-      - ./backend/api-rest-php:/var/www/html
+      - "3001:3001"  # Le backend écoute sur le port 3001
     networks:
       - app-network
     depends_on:
       - mariadb
+    environment:
+      NODE_ENV: production  # Assurez-vous que votre backend fonctionne en mode production
 
   frontend:
-    image: nginx:latest
+    build:
+      context: ./frontend  # Le répertoire du frontend
+      dockerfile: Dockerfile # Dockerfile spécifique pour le frontend
     container_name: frontend
     ports:
-      - "8082:80"
-    volumes:
-      - ./frontend:/usr/share/nginx/html
+      - "8082:3000"  # Next.js écoute sur le port 3000 dans le conteneur
     networks:
       - app-network
+    depends_on:
+      - backend  # Le frontend dépend du backend
 
   mariadb:
-    image: mariadb # Image Docker officielle de MariaDB
+    image: mariadb
     container_name: mariadb
-    restart: "no" # Ne pas redémarrer automatiquement le conteneur
+    restart: "no"
     ports:
-      - 3306:3306 # Le port 3306 de l'hôte est mappé au port 3306 du conteneur MariaDB
+      - "3306:3306"
     volumes:
-      - ./datadb:/var/lib/mysql # Le répertoire ./datadb est monté pour persister les données de la base de données
+      - ./datadb:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: super # Mot de passe pour l'utilisateur root
-      MYSQL_DATABASE: instacfpt2 # Base de données initiale qui sera créée à la première exécution
+      MYSQL_ROOT_PASSWORD: super
+      MYSQL_DATABASE: instacfpt2
     networks:
       - app-network
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin # Image Docker officielle de phpMyAdmin
+    image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
-    restart: "no" # Ne pas redémarrer automatiquement le conteneur
+    restart: "no"
     ports:
-      - 8081:80  # Le port 8081 de l'hôte est mappé au port 80 du conteneur phpMyAdmin
+      - "8081:80"
     environment:
-      PMA_HOST: mariadb  # Nom du service MariaDB auquel se connecter
-      PMA_PORT: 3306     # Port utilisé par MariaDB
-      PMA_USER: root     # Utilisateur root pour la connexion
-      PMA_PASSWORD: super  # Mot de passe pour l'utilisateur root
-    depends_on: # Dépendance du service phpMyAdmin envers le service MariaDB
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: super
+    depends_on:
       - mariadb
     networks:
       - app-network
@@ -55,12 +61,13 @@ services:
     image: nginx:latest
     container_name: reverse-proxy
     ports:
-      - "80:80"
+      - "80:80"  # Reverse proxy accessible sur le port 80
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx.conf:/etc/nginx/nginx.conf  # Configuration Nginx personnalisée
     networks:
       - app-network
     depends_on:
+      - frontend
       - backend
 
 networks:

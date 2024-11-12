@@ -1,0 +1,35 @@
+# Utilise l'image officielle de Node.js (LTS)
+FROM node:18 AS build
+
+# Définir le répertoire de travail dans le conteneur
+WORKDIR /app
+
+# Copier les fichiers package.json et package-lock.json (ou yarn.lock si vous utilisez Yarn)
+COPY ./package*.json ./
+
+# Installer les dépendances
+RUN npm install
+
+# Copier tout le code source dans le conteneur
+COPY . ./
+
+# Construire l'application Next.js (création des pages statiques, optimisation)
+RUN npm run build
+
+# Étape de production : on ne garde que l'application prête pour la production
+FROM node:18-slim
+
+# Définir le répertoire de travail dans le conteneur
+WORKDIR /app
+
+# Copier uniquement les fichiers nécessaires à l'exécution depuis l'étape build
+COPY --from=build /app ./
+
+# Installer seulement les dépendances nécessaires à l'exécution (production)
+RUN npm install --only=production
+
+# Exposer le port sur lequel Next.js va écouter
+EXPOSE 3000
+
+# Démarrer le serveur Next.js en mode production
+CMD ["npm", "start"]
