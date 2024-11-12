@@ -28,14 +28,18 @@ const Header = (props: HeaderProps) => {
 
     const [newPostImage, setNewPostImage] = React.useState<string | null>(null)
 
-    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
+    const handleRemoveImage = () => {
+        setNewPostImage(null);
+    };
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const image = e.target?.result as string;
-            };
-            reader.readAsDataURL(file);
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setNewPostImage(reader.result as string)
+            }
+            reader.readAsDataURL(file)
         }
     }
 
@@ -61,21 +65,36 @@ const Header = (props: HeaderProps) => {
                                 <DialogTitle>Create new post</DialogTitle>
                             </DialogHeader>
                             <form onSubmit={handleNewPost} className="space-y-4">
-                                <div className="flex items-center justify-center w-full h-32 border-2 border-dashed rounded-md">
-                                    {newPostImage ? (
-                                        <img src={newPostImage} alt="New post" className="max-h-full" />
-                                    ) : (
-                                        <label htmlFor="image-upload" className="cursor-pointer">
-                                            <ImageIcon className="w-8 h-8 text-gray-400" />
-                                            <input
-                                                id="image-upload"
-                                                type="file"
-                                                accept="image/*"
-                                                className="hidden"
-                                                onChange={handleImageUpload}
-                                            />
-                                        </label>
-                                    )}
+                                <div className="space-y-2">
+                                    <Label htmlFor="image-upload">Upload Image</Label>
+                                    <div className="flex items-center justify-center w-full h-48 border-2 border-dashed rounded-md overflow-hidden relative">
+                                        {newPostImage ? (
+                                            <>
+                                                <img src={newPostImage} alt="New post preview" className="max-w-full max-h-full object-contain" />
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    className="absolute top-2 right-2"
+                                                    onClick={handleRemoveImage}
+                                                >
+                                                    Remove
+                                                </Button>
+                                            </>
+                                        ) : (
+                                            <label htmlFor="image-upload" className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
+                                                <ImageIcon className="w-8 h-8 text-gray-400" />
+                                                <span className="mt-2 text-sm text-gray-500">Click to upload an image</span>
+                                            </label>
+                                        )}
+                                        <input
+                                            id="image-upload"
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={handleImageUpload}
+                                        />
+                                    </div>
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="caption">Caption</Label>
@@ -94,7 +113,7 @@ const Header = (props: HeaderProps) => {
                     </Avatar>
                 </div>
             </div>
-        </header>
+        </header >
     )
 }
 
