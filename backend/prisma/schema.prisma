@@ -1,0 +1,80 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL") // Make sure to set this in your .env file
+}
+
+model Comment {
+  CommentID  BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  PostID     BigInt   @db.UnsignedBigInt
+  UserID     BigInt   @db.UnsignedBigInt
+  Content    String
+  CreatedAt  DateTime @db.Timestamp(6) @default(now())
+  
+  Post       Post     @relation(fields: [PostID], references: [PostID])
+  User       User     @relation(fields: [UserID], references: [UserID])
+}
+
+model Follow {
+  FollowerID BigInt   @db.UnsignedBigInt
+  FolloweeID BigInt   @db.UnsignedBigInt
+  CreatedAt  DateTime @db.Timestamp(6) @default(now())
+  
+  Follower   User     @relation("Follower", fields: [FollowerID], references: [UserID])
+  Followee   User     @relation("Followee", fields: [FolloweeID], references: [UserID])
+
+  @@id([FollowerID, FolloweeID])
+}
+
+model Like {
+  LikeID     BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  PostID     BigInt   @db.UnsignedBigInt
+  UserID     BigInt   @db.UnsignedBigInt
+  CreatedAt  DateTime @db.Timestamp(6) @default(now())
+
+  Post       Post     @relation(fields: [PostID], references: [PostID])
+  User       User     @relation(fields: [UserID], references: [UserID])
+}
+
+model Photo {
+  PhotoID   BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  PostID    BigInt   @db.UnsignedBigInt
+  PhotoURL  String
+  CreatedAt DateTime @db.Timestamp(6) @default(now())
+
+  Post      Post     @relation(fields: [PostID], references: [PostID])
+}
+
+model Post {
+  PostID    BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  UserID    BigInt   @db.UnsignedBigInt
+  ContentURL String? @db.VarChar(255)
+  Caption   String?  
+  CreatedAt DateTime @db.Timestamp(6) @default(now())
+
+  User      User     @relation(fields: [UserID], references: [UserID])
+  Comments  Comment[]
+  Likes     Like[]
+  Photos    Photo[]
+}
+
+model User {
+  UserID      BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  Username    String
+  Email       String
+  PasswordHash String
+  ProfilePicture String?
+  Bio         String?
+  CreatedAt   DateTime  @db.Timestamp(6) @default(now())
+
+  Posts       Post[]    @relation("UserPosts")
+  Comments    Comment[] @relation("UserComments")
+  Follows     Follow[]  @relation("Follower")
+  FollowsTo   Follow[]  @relation("Followee")
+  Likes       Like[]
+}
