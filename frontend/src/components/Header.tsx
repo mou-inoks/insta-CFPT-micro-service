@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react'
+import React, { ChangeEvent, FormEvent } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Heart, Home, Image as ImageIcon, MessageCircle, PlusSquare, Search, Send } from 'lucide-react';
@@ -13,16 +13,31 @@ interface HeaderProps {
 }
 
 const Header = (props: HeaderProps) => {
+
     const { setPosts, setLikes } = props;
+
     const handleNewPost = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const caption = formData.get('caption') as string;
-    
+
         const newPost = await createPost('currentuser', '/placeholder.svg?height=500&width=500', caption);
         setPosts((prev) => [newPost, ...prev]);
         setLikes((prev) => ({ ...prev, [newPost.id]: 0 }));
     };
+
+    const [newPostImage, setNewPostImage] = React.useState<string | null>(null)
+
+    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const image = e.target?.result as string;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 
     return (
         <header className="sticky top-0 z-10 bg-white border-b">
@@ -46,6 +61,22 @@ const Header = (props: HeaderProps) => {
                                 <DialogTitle>Create new post</DialogTitle>
                             </DialogHeader>
                             <form onSubmit={handleNewPost} className="space-y-4">
+                                <div className="flex items-center justify-center w-full h-32 border-2 border-dashed rounded-md">
+                                    {newPostImage ? (
+                                        <img src={newPostImage} alt="New post" className="max-h-full" />
+                                    ) : (
+                                        <label htmlFor="image-upload" className="cursor-pointer">
+                                            <ImageIcon className="w-8 h-8 text-gray-400" />
+                                            <input
+                                                id="image-upload"
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={handleImageUpload}
+                                            />
+                                        </label>
+                                    )}
+                                </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="caption">Caption</Label>
                                     <Textarea id="caption" name="caption" placeholder="Write a caption..." />
