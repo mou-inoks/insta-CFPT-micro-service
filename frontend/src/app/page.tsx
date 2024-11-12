@@ -1,12 +1,12 @@
 'use client'
-import React, { FormEvent, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Heart, Home, Image as ImageIcon, MessageCircle, PlusSquare, Search, Send } from 'lucide-react';
-import { fetchPosts, createPost, likePost, Post } from '@/app/service/postService';
+import { Heart,  Image as  MessageCircle, Send } from 'lucide-react';
+import { fetchPosts,likePost, Post } from '@/app/service/postService';
 import Header from '@/components/Header';
 
 export default function Component() {
