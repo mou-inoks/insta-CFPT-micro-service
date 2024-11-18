@@ -1,3 +1,4 @@
+"use client"
 import React, { FormEvent } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";

@@ -7,7 +7,7 @@ class AuthService {
         this.apiUrl = apiUrl;
     }
 
-    async login(email: string, password: string): Promise<{ token: string }>{
+    async login(email: string, password: string): Promise<{ token: string }> {
         try {
             console.log("test")
             const response = await axios.post(`${this.apiUrl}/auth/login`, {
@@ -26,6 +26,36 @@ class AuthService {
             } else {
                 throw new Error('Login failed: Unknown error');
             }
+        }
+    }
+
+    async register(username: string, email: string, password: string, confirmPassword: string): Promise<{ token: string }> {
+        if (password !== confirmPassword) {
+            throw new Error('Passwords do not match');
+        }
+        if (username && email && password) {
+            try {
+                const response = await axios.post(`${this.apiUrl}/auth/register`, {
+                    username,
+                    email,
+                    password
+                });
+
+                if (response.data && response.data.token) {
+                    return response.data.token;
+                } else {
+                    throw new Error('Token not found in response');
+                }
+            } catch (error) {
+                if (error instanceof Error) {
+                    throw new Error(`Registration failed: ${error.message}`);
+                } else {
+                    throw new Error('Registration failed: Unknown error');
+                }
+            }
+        }
+        else {
+            throw new Error('Invalid input: username, email, and password are required');
         }
     }
 }

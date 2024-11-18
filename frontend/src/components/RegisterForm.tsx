@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { UserPlus, Mail, Lock, User } from 'lucide-react';
 import type { RegisterFormData } from '@/types/types';
+import AuthService from '@/service/authService';
+import { useRouter } from 'next/router';
 
 interface RegisterFormProps {
     onRegister: (data: RegisterFormData) => void;
@@ -15,10 +17,19 @@ export default function RegisterForm({ onRegister, onSwitchToLogin, error }: Reg
         password: '',
         confirmPassword: ''
     });
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const authService = new AuthService(process.env.DATABASE_URL || 'http://localhost:3001/api');
+    const router = useRouter();
+    
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        onRegister(formData);
+        try{
+            const response = await authService.register(formData.username, formData.email, formData.password, formData.confirmPassword);    
+            localStorage.setItem('token', response.token);
+            onRegister({ username: formData.username, email: formData.email, password: formData.password, confirmPassword: formData.confirmPassword });
+            router.push('/dashboard');
+        }catch(err){
+            console.error(err);
+        }
     };
 
     return (

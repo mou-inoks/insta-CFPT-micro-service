@@ -26,7 +26,6 @@ const PostList = () => {
     <div>
       {posts.map((post) => (
         <div key={post.id} className="card">
-          {/* Correction ici : Utilisation de AvatarImage */}
           <Avatar>
             <AvatarImage src="/placeholder-user.jpg" alt={post.username} />
             <AvatarFallback>{post.username.slice(0, 2).toUpperCase()}</AvatarFallback>
