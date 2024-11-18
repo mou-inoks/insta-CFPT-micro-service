@@ -1,20 +1,12 @@
-# Utiliser une image de Node.js
-FROM node:16
+FROM node
 
-# Créer un répertoire de travail dans le conteneur
 WORKDIR /app
 
-# Copier les fichiers package.json et package-lock.json
-COPY ./package.json ./package-lock.json ./
-
-# Installer les dépendances de Node.js
-RUN npm install
-
-# Copier tout le code source du backend dans le conteneur
+COPY package.json /app
+COPY prisma ./prisma/
 COPY . /app
+RUN npm install --force --loglevel verbose
+RUN npx prisma generate
+RUN npm run build
 
-# Exposer le port sur lequel l'application backend s'exécute
-EXPOSE 3001
-
-# Exécuter le serveur TypeScript avec ts-node
-CMD ["npx", "ts-node", "server.ts"]
+CMD ["npm", "run", "dev"]
