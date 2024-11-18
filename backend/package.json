@@ -4,7 +4,7 @@
   "description": "Instagram for CFPT - ExpressJS backend",
   "main": "app.js",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "nodemon --exec npx ts-node src/server.ts",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
     "build": "tsc"
   },
