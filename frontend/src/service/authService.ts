@@ -35,7 +35,7 @@ class AuthService {
         }
         if (username && email && password) {
             try {
-                const response = await axios.post(`${this.apiUrl}/auth/register`, {
+                const response = await axios.post(`${this.apiUrl}/users`, {
                     username,
                     email,
                     password
