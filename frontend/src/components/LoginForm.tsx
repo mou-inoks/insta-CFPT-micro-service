@@ -1,8 +1,9 @@
+'use client'
 import React, { useState } from 'react';
 import { LogIn, User } from 'lucide-react';
 import type { LoginFormData } from '@/types/types';
 import AuthService from '@/service/authService';
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/navigation';
 
 interface LoginFormProps {
     onLogin: (data: LoginFormData) => void;
@@ -17,7 +18,7 @@ export default function LoginForm({ onLogin, error, onSwitchToRegister }: LoginF
     });
 
     const authService = new AuthService(process.env.DATABASE_URL || '');
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -25,7 +26,7 @@ export default function LoginForm({ onLogin, error, onSwitchToRegister }: LoginF
             const response = await authService.login(formData.email, formData.password);
             localStorage.setItem('token', response.token);
             onLogin({ email: formData.email, password: formData.password });
-            navigate('/home');
+            router.push('/home');
         } catch (err) {
             console.error(err);
         }

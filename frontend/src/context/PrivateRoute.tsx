@@ -1,6 +1,6 @@
-// components/PrivateRoute.tsx
+'use client'
 import React from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {

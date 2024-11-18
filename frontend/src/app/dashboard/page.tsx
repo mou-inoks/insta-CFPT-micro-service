@@ -1,3 +1,5 @@
+'use client'
+
 import Dashboard from "@/components/Dashboard";
 import { useAuth } from "@/context/AuthContext";
 import PrivateRoute from "@/context/PrivateRoute";

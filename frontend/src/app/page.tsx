@@ -1,42 +1,20 @@
-'use client'
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from '@/context/AuthContext';
-import PrivateRoute from '@/context/PrivateRoute';
-import DashboardPage from '@/pages/dashboard/page';
-import LoginPage from '@/pages/login/page';
-import RegisterPage from '@/pages/register/page';
+'use client';
 
-function App() {
-  return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route
-            path="/login"
-            element={
-                <LoginPage />
-            }
-          />
-          <Route
-            path="/register"
-            element={
-                <RegisterPage />
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute>
-                <DashboardPage />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  );
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      router.push('/dashboard');
+    } else {
+      router.push('/login');
+    }
+  }, [router]);
+
+  return <p>Loading...</p>;
 }
-
-export default App;
