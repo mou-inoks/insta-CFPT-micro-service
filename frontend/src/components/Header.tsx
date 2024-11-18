@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createPost, Post } from '@/service/postService';
+import Image from 'next/image';
 
 interface HeaderProps {
     setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
@@ -71,7 +72,7 @@ const Header = (props: HeaderProps) => {
                                     <div className="flex items-center justify-center w-full h-48 border-2 border-dashed rounded-md overflow-hidden relative">
                                         {newPostImage ? (
                                             <>
-                                                <img src={newPostImage} alt="New post preview" className="max-w-full max-h-full object-contain" />
+                                                <Image src={newPostImage} alt="New post preview" className="max-w-full max-h-full object-contain" />
                                                 <Button
                                                     type="button"
                                                     variant="destructive"

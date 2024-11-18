@@ -9,6 +9,7 @@ import { Heart, Image as MessageCircle, Send } from 'lucide-react';
 import { fetchPosts, likePost, Post } from '@/service/postService';
 import Header from '@/components/Header';
 import { logout } from '@/utils/auth';
+import Image from 'next/image';
 
 type DashboardProps = {
     onLogout: () => void;   
@@ -61,7 +62,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                                     <div className="font-semibold">{post.username}</div>
                                 </CardHeader>
                                 <CardContent className="p-0">
-                                    <img
+                                    <Image
                                         src={post.image}
                                         alt="Post image"
                                         className="w-full h-auto"
