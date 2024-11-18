@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { checkSession, saveUserSession, logout as authLogout } from '../utils/auth';
 import type { User, LoginFormData, RegisterFormData } from '@/types/types';
+import axios from 'axios';
 
 interface AuthContextType {
     user: User | null;
@@ -33,26 +34,56 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return () => clearInterval(interval);
     }, []);
 
-    const login = (data: LoginFormData) => {
+    const login = async (data: LoginFormData) => {
         if (data.email && data.password) {
-            saveUserSession(data.email);
-            setUser({ email: data.email, lastLoginTime: Date.now() });
-            setError(undefined);
+            try {
+                const response = await axios.post('/api/login', data, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const result = response.data;
+                saveUserSession(result.username);
+                setUser({ email: result.email, lastLoginTime: Date.now() });
+                setError(undefined);
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
+                    setError(error.response.data.message || 'Login failed');
+                } else {
+                    setError('An unknown error occurred');
+                }
+            }
         } else {
             setError('Invalid credentials');
         }
     };
 
-    const register = (data: RegisterFormData) => {
+    const register = async (data: RegisterFormData) => {
         if (data.password !== data.confirmPassword) {
             setError('Passwords do not match');
             return;
         }
 
         if (data.username && data.email && data.password) {
-            saveUserSession(data.username);
-            setUser({ email: data.email, lastLoginTime: Date.now() });
-            setError(undefined);
+            try {
+                const response = await axios.post('/api/register', data, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const result = response.data;
+                saveUserSession(result.username);
+                setUser({ email: result.email, lastLoginTime: Date.now() });
+                setError(undefined);
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
+                    setError(error.response.data.message || 'Registration failed');
+                } else {
+                    setError('An unknown error occurred');
+                }
+            }
         } else {
             setError('Please fill in all fields');
         }

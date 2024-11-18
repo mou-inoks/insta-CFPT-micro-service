@@ -7,10 +7,11 @@ class AuthService {
         this.apiUrl = apiUrl;
     }
 
-    async login(username: string, password: string): Promise<{ token: string }>{
+    async login(email: string, password: string): Promise<{ token: string }>{
         try {
-            const response = await axios.post(`${this.apiUrl}/login`, {
-                username,
+            console.log("test")
+            const response = await axios.post(`${this.apiUrl}/auth/login`, {
+                email,
                 password
             });
 

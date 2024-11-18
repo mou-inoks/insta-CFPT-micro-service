@@ -17,16 +17,17 @@ export default function LoginForm({ onLogin, error, onSwitchToRegister }: LoginF
         password: '',
     });
 
-    const authService = new AuthService(process.env.DATABASE_URL || '');
+    const authService = new AuthService(process.env.DATABASE_URL || 'http://localhost:3001/api');
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             const response = await authService.login(formData.email, formData.password);
+            console.log("response",response);
             localStorage.setItem('token', response.token);
             onLogin({ email: formData.email, password: formData.password });
-            router.push('/home');
+            router.push('/dashboard');
         } catch (err) {
             console.error(err);
         }
