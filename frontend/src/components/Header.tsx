@@ -1,7 +1,7 @@
-import React, {  FormEvent } from 'react'
+import React, { FormEvent } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import {  Home, Image as ImageIcon, MessageCircle, PlusSquare, Search } from 'lucide-react';
+import { Home, Image as ImageIcon, LogOut, MessageCircle, PlusSquare, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -10,11 +10,12 @@ import { createPost, Post } from '@/app/service/postService';
 interface HeaderProps {
     setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
     setLikes: React.Dispatch<React.SetStateAction<{ [key: string]: number }>>;
+    onLogout: () => void;   
 }
 
 const Header = (props: HeaderProps) => {
 
-    const { setPosts, setLikes } = props;
+    const { setPosts, setLikes, onLogout } = props;
 
     const handleNewPost = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -111,6 +112,13 @@ const Header = (props: HeaderProps) => {
                         <AvatarImage src="/placeholder-user.jpg" alt="@username" />
                         <AvatarFallback>UN</AvatarFallback>
                     </Avatar>
+                    <button
+                        onClick={onLogout}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                    >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                    </button>
                 </div>
             </div>
         </header >
