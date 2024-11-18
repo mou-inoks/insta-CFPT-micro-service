@@ -1,67 +1,73 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser';
-import { PrismaClient } from '@prisma/client';  // Import Prisma Client
+import { PrismaClient } from '@prisma/client';
 
 const app = express();
 const port = 3001;
 
-const prisma = new PrismaClient();  // Instantiate Prisma Client
+const prisma = new PrismaClient();
 
-const corsOptions = {
-  origin: 'http://localhost:3000',  // Replace with your frontend URL
-  methods: ['GET', 'POST', 'PUT'], // Allowed methods
-  allowedHeaders: ['Content-Type'], // Allowed headers
-};
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT'],
+  allowedHeaders: ['Content-Type'],
+}));
 
-app.use(cors(corsOptions));
-app.use(bodyParser.json());
+app.use(express.json());
 
-// POST endpoint to create a new post
 app.post('/api/posts', async (req: Request, res: Response) => {
-  const { username, image, caption } = req.body;
-  
+  const { authorId, imageUrl, description } = req.body;
+
   try {
     const newPost = await prisma.post.create({
       data: {
-        username,
-        image,
-        caption,
-        likes: 0,  // Default value
+        authorId,
+        imageUrl,
+        description,
       },
     });
-    res.status(201).json(newPost);  // Respond with the created post
+    res.status(201).json(newPost);
   } catch (error) {
+    console.error('Error creating post:', error);
     res.status(500).json({ message: 'Error creating post', error });
   }
 });
 
-// GET endpoint to fetch all posts
-app.get('/api/posts', async (req: Request, res: Response) => {
+app.get('/api/posts', async (_req: Request, res: Response) => {
   try {
-    const posts = await prisma.post.findMany();  // Fetch all posts from the database
+    const posts = await prisma.post.findMany({
+      include: {
+        author: true, 
+      },
+    });
     res.json(posts);
   } catch (error) {
+    console.error('Error fetching posts:', error);
     res.status(500).json({ message: 'Error fetching posts', error });
   }
 });
 
-// PUT endpoint to like a post
 app.put('/api/posts/:id/like', async (req: Request, res: Response) => {
-  const postId = req.params.id;
+  const postId = parseInt(req.params.id, 10);
 
   try {
     const post = await prisma.post.update({
-      where: { id: postId },  // Find the post by its ID
-      data: { likes: { increment: 1 } },  // Increment the like count by 1
+      where: { id: postId },
+      data: {
+        likes: {
+          increment: 1,
+        },
+      },
     });
-
-    res.json(post);  // Return the updated post
+    res.json(post);
   } catch (error) {
+    console.error('Error updating likes:', error);
     res.status(404).json({ message: 'Post not found', error });
   }
+  res.status(501).json({ message: 'Likes feature not implemented' });
 });
 
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });

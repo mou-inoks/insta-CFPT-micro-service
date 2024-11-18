@@ -1,18 +1,13 @@
 {
     "compilerOptions": {
         "target": "ESNext",
-        "module": "CommonJS",
-        "strict": true,
+        "module": "ESNext",
+        "moduleResolution": "node",
         "esModuleInterop": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "moduleResolution": "node",
-        "types": [
-            "node"
-        ],
-        "typeRoots": [
-            "./node_modules/@types",
-            "./src/@types"
-        ]
-    }
+        "strict": true
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
 }
