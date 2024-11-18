@@ -1,4 +1,4 @@
-// schema.prisma
+// Prisma schema for Instagram-like posts
 
 generator client {
   provider = "prisma-client-js"
@@ -6,75 +6,29 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL") // Make sure to set this in your .env file
-}
-
-model Comment {
-  CommentID  BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  PostID     BigInt   @db.UnsignedBigInt
-  UserID     BigInt   @db.UnsignedBigInt
-  Content    String
-  CreatedAt  DateTime @db.Timestamp(6) @default(now())
-  
-  Post       Post     @relation(fields: [PostID], references: [PostID])
-  User       User     @relation(fields: [UserID], references: [UserID], name: "UserComments")
-}
-
-model Follow {
-  FollowerID BigInt   @db.UnsignedBigInt
-  FolloweeID BigInt   @db.UnsignedBigInt
-  CreatedAt  DateTime @db.Timestamp(6) @default(now())
-  
-  Follower   User     @relation("Follower", fields: [FollowerID], references: [UserID])
-  Followee   User     @relation("Followee", fields: [FolloweeID], references: [UserID])
-
-  @@id([FollowerID, FolloweeID])
-}
-
-model Like {
-  LikeID     BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  PostID     BigInt   @db.UnsignedBigInt
-  UserID     BigInt   @db.UnsignedBigInt
-  CreatedAt  DateTime @db.Timestamp(6) @default(now())
-
-  Post       Post     @relation(fields: [PostID], references: [PostID])
-  User       User     @relation(fields: [UserID], references: [UserID])
-}
-
-model Photo {
-  PhotoID   BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  PostID    BigInt   @db.UnsignedBigInt
-  PhotoURL  String
-  CreatedAt DateTime @db.Timestamp(6) @default(now())
-
-  Post      Post     @relation(fields: [PostID], references: [PostID])
+  url      = env("DATABASE_URL")
 }
 
 model Post {
-  PostID    BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  UserID    BigInt   @db.UnsignedBigInt
-  ContentURL String? @db.VarChar(255)
-  Caption   String?  
-  CreatedAt DateTime @db.Timestamp(6) @default(now())
+  id          Int      @id @default(autoincrement()) 
+  description String   
+  imageUrl    String  
+  createdAt   DateTime @default(now()) 
+  updatedAt   DateTime @updatedAt
+  authorId    Int?   
 
-  User      User     @relation(fields: [UserID], references: [UserID], name: "UserPosts")
-  Comments  Comment[]
-  Likes     Like[]
-  Photos    Photo[]
+  author      User?    @relation(fields: [authorId], references: [id])
+
+  @@index([authorId]) 
 }
 
 model User {
-  UserID      BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  Username    String
-  Email       String
-  PasswordHash String
-  ProfilePicture String?
-  Bio         String?
-  CreatedAt   DateTime  @db.Timestamp(6) @default(now())
+  id        Int      @id @default(autoincrement()) 
+  username  String   @unique 
+  email     String   @unique
+  password  String
+  posts     Post[] 
 
-  Posts       Post[]    @relation("UserPosts")
-  Comments    Comment[] @relation("UserComments")
-  Follows     Follow[]  @relation("Follower")
-  FollowsTo   Follow[]  @relation("Followee")
-  Likes       Like[]
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt
 }
