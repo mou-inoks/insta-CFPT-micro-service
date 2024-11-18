@@ -6,16 +6,15 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Heart, Image as MessageCircle, Send } from 'lucide-react';
-import { fetchPosts, likePost, Post } from '@/app/service/postService';
+import { fetchPosts, likePost, Post } from '@/service/postService';
 import Header from '@/components/Header';
-import { LogOut } from 'lucide-react';
+import { logout } from '@/utils/auth';
 
 type DashboardProps = {
-    onLogout: () => void;
+    onLogout: () => void;   
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
-
 
     const [posts, setPosts] = useState<Post[]>([]);
     const [likes, setLikes] = useState<{ [key: string]: number }>({});

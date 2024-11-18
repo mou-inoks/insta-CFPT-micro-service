@@ -1,6 +1,6 @@
 "use client"
 import { FormEvent } from 'react';
-import { createPost } from '@/app/service/postService';
+import { createPost } from '@/service/postService';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 

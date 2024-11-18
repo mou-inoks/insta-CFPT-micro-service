@@ -1,9 +1,16 @@
 export interface User {
-    username: string;
+    email: string;
     lastLoginTime: number;
 }
 
 export interface LoginFormData {
-    username: string;
+    email: string;
     password: string;
+}
+
+export interface RegisterFormData {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
 }

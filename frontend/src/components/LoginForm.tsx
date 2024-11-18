@@ -1,21 +1,34 @@
 import React, { useState } from 'react';
 import { LogIn, User } from 'lucide-react';
 import type { LoginFormData } from '@/types/types';
+import AuthService from '@/service/authService';
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormProps {
     onLogin: (data: LoginFormData) => void;
     error?: string;
+    onSwitchToRegister?: () => void;
 }
 
-export default function LoginForm({ onLogin, error }: LoginFormProps) {
+export default function LoginForm({ onLogin, error, onSwitchToRegister }: LoginFormProps) {
     const [formData, setFormData] = useState<LoginFormData>({
-        username: '',
+        email: '',
         password: '',
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const authService = new AuthService(process.env.DATABASE_URL || '');
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        onLogin(formData);
+        try {
+            const response = await authService.login(formData.email, formData.password);
+            localStorage.setItem('token', response.token);
+            onLogin({ email: formData.email, password: formData.password });
+            navigate('/home');
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (
@@ -29,16 +42,16 @@ export default function LoginForm({ onLogin, error }: LoginFormProps) {
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                    <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                        Username
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                        Email
                     </label>
                     <input
-                        id="username"
-                        type="text"
+                        id="email"
+                        type="email"
                         required
                         className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                        value={formData.username}
-                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     />
                 </div>
 
@@ -67,6 +80,16 @@ export default function LoginForm({ onLogin, error }: LoginFormProps) {
                     <LogIn className="w-4 h-4" />
                     Sign in
                 </button>
+
+                <div className="text-center mt-4">
+                    <button
+                        type="button"
+                        onClick={onSwitchToRegister}
+                        className="text-sm text-indigo-600 hover:text-indigo-500"
+                    >
+                        Don't have an account? Sign up
+                    </button>
+                </div>
             </form>
         </div>
     );

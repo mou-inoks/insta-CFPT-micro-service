@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from 'react';
-import { fetchPosts, likePost, Post } from '@/app/service/postService';
+import { fetchPosts, likePost, Post } from '@/service/postService';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar'; // Ajout de AvatarImage
 import { Button } from './ui/button';
 import { Heart } from 'lucide-react';

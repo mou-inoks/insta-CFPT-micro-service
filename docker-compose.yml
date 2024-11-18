@@ -32,7 +32,7 @@ services:
     container_name: mariadb
     restart: "no"
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - ./datadb:/var/lib/mysql
     environment:

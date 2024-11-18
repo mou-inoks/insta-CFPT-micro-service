@@ -5,7 +5,7 @@ import { Home, Image as ImageIcon, LogOut, MessageCircle, PlusSquare, Search } f
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { createPost, Post } from '@/app/service/postService';
+import { createPost, Post } from '@/service/postService';
 
 interface HeaderProps {
     setPosts: React.Dispatch<React.SetStateAction<Post[]>>;

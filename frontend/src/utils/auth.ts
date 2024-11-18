@@ -3,9 +3,9 @@ import { User } from '@/types/types';
 const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 const STORAGE_KEY = 'user_session';
 
-export const saveUserSession = (username: string) => {
+export const saveUserSession = (email: string) => {
     const user: User = {
-        username,
+        email: email,
         lastLoginTime: Date.now(),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
@@ -23,8 +23,7 @@ export const checkSession = (): User | null => {
         return null;
     }
 
-    // Update last login time
-    saveUserSession(user.username);
+    saveUserSession(user.email);
     return user;
 };
 
