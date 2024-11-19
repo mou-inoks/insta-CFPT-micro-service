@@ -21,6 +21,14 @@ Assurez-vous d'avoir installé les éléments suivants sur votre machine :
 Backend:
 ```bash
 DATABASE_URL=mysql://root:super@mariadb:3306/instacfpt2
+JWT_SECRET=mysecret
+JWT_EXPIRES_IN=7d
+```
+
+Frontend:
+```bash
+VITE_BACKEND_BASE_URL=http://127.0.0.1:9000
+VITE_BACKEND_API_URL=http://127.0.0.1:9000/api/v1
 ```
 
 **3. Lancer le projet avec docker compose :**

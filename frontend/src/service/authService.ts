@@ -9,7 +9,6 @@ class AuthService {
 
     async login(email: string, password: string): Promise<{ token: string }> {
         try {
-            console.log("test")
             const response = await axios.post(`${this.apiUrl}/auth/login`, {
                 email,
                 password
@@ -40,9 +39,8 @@ class AuthService {
                     email,
                     password
                 });
-
                 if (response.data && response.data.token) {
-                    return response.data.token;
+                    return response.data;
                 } else {
                     throw new Error('Token not found in response');
                 }

@@ -7,8 +7,9 @@ import PrivateRoute from "@/context/PrivateRoute";
 
 export default function DashboardPage() {
     const { user, logout } = useAuth();
+    console.log(user)
 
-    if (!user) return null;
+    // if (!user) return null;
 
     return (
         <PrivateRoute>

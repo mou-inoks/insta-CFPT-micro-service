@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const login = async (data: LoginFormData) => {
         if (data.email && data.password) {
             try {
-                const response = await axios.post('/api/login', data, {
+                const response = await axios.post('/api/auth/login', data, {
                     headers: {
                         'Content-Type': 'application/json',
                     },

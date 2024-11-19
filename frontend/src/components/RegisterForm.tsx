@@ -1,8 +1,9 @@
+"use client"
 import React, { useState } from 'react';
 import { UserPlus, Mail, Lock, User } from 'lucide-react';
 import type { RegisterFormData } from '@/types/types';
 import AuthService from '@/service/authService';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface RegisterFormProps {
     onRegister: (data: RegisterFormData) => void;
@@ -17,6 +18,7 @@ export default function RegisterForm({ onRegister, onSwitchToLogin, error }: Reg
         password: '',
         confirmPassword: ''
     });
+
     const authService = new AuthService(process.env.DATABASE_URL || 'http://localhost:3001/api');
     const router = useRouter();
     
