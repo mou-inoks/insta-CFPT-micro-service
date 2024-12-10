@@ -17,7 +17,7 @@ type DashboardProps = {
 
 const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<Array<Post>>([]);
     const [likes, setLikes] = useState<{ [key: string]: number }>({});
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
             const fetchedPosts = await fetchPosts();
             setPosts(fetchedPosts);
             const initialLikes: { [key: string]: number } = {};
-            fetchedPosts.forEach((post) => {
+            fetchedPosts?.forEach((post) => {
                 initialLikes[post.id] = post.likes;
             });
             setLikes(initialLikes);
@@ -52,7 +52,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
             <main className="flex-grow container mx-auto px-4 py-8 max-w-screen-xl">
                 <div className="flex flex-col md:flex-row gap-8">
                     <div className="flex-grow space-y-6 md:w-2/3">
-                        {posts.map((post) => (
+                        {posts?.map((post) => (
                             <Card key={post.id}>
                                 <CardHeader className="flex flex-row items-center gap-4">
                                     <Avatar>

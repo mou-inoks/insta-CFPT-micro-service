@@ -12,7 +12,7 @@ import Image from 'next/image';
 interface HeaderProps {
     setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
     setLikes: React.Dispatch<React.SetStateAction<{ [key: string]: number }>>;
-    onLogout: () => void;   
+    onLogout: () => void;
 }
 
 const Header = (props: HeaderProps) => {

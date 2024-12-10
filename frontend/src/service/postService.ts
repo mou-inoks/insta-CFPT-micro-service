@@ -8,10 +8,10 @@ export interface Post {
   
   const API_URL = "http://localhost:3001/api/posts";
   
-  export const fetchPosts = async (): Promise<Post[]> => {
+  export const fetchPosts = async (): Promise<Array<Post>> => {
     const response = await fetch(API_URL);
     const data = await response.json();
-    return data;
+    return data as Array<Post>;
   };
   
   export const createPost = async (username: string, image: string, caption: string): Promise<Post> => {

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { LogIn, User } from 'lucide-react';
 import type { LoginFormData } from '@/types/types';
-import AuthService from '@/service/authService';
+import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 interface LoginFormProps {
@@ -17,15 +17,16 @@ export default function LoginForm({ onLogin, error, onSwitchToRegister }: LoginF
         password: '',
     });
 
-    const authService = new AuthService(process.env.DATABASE_URL || 'http://localhost:3001/api');
+    const { login } = useAuth()
+
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await authService.login(formData.email, formData.password);
-            console.log("response",response);
-            localStorage.setItem('token', response.token);
+            const response: any = await login(formData);
+            
+            localStorage.setItem('token', response);
             onLogin({ email: formData.email, password: formData.password });
             router.push('/dashboard');
         } catch (err) {

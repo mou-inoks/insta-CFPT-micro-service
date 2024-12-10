@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
     const { isAuthenticated } = useAuth();
     const router = useRouter();
+    
 
     if (!isAuthenticated) {
         router.push('/login');

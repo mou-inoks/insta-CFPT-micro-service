@@ -13,6 +13,7 @@ interface AuthContextType {
     logout: () => void;
 }
 
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -37,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const login = async (data: LoginFormData) => {
         if (data.email && data.password) {
             try {
-                const response = await axios.post('/api/auth/login', data, {
+                const response = await axios.post('http://127.0.0.1:3001/api/auth/login', data, {
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -47,6 +48,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 saveUserSession(result.username);
                 setUser({ email: result.email, lastLoginTime: Date.now() });
                 setError(undefined);
+
+                return result
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response) {
                     setError(error.response.data.message || 'Login failed');
@@ -67,7 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (data.username && data.email && data.password) {
             try {
-                const response = await axios.post('/api/register', data, {
+                const response = await axios.post('http://127.0.0.1:3001/api/users/', data, {
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -77,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 saveUserSession(result.username);
                 setUser({ email: result.email, lastLoginTime: Date.now() });
                 setError(undefined);
+                return result
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response) {
                     setError(error.response.data.message || 'Registration failed');

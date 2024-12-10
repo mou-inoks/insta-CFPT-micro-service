@@ -2,16 +2,15 @@
 import React, { useState } from 'react';
 import { UserPlus, Mail, Lock, User } from 'lucide-react';
 import type { RegisterFormData } from '@/types/types';
-import AuthService from '@/service/authService';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 interface RegisterFormProps {
-    onRegister: (data: RegisterFormData) => void;
     onSwitchToLogin: () => void;
     error?: string;
 }
 
-export default function RegisterForm({ onRegister, onSwitchToLogin, error }: RegisterFormProps) {
+export default function RegisterForm({ onSwitchToLogin, error }: RegisterFormProps) {
     const [formData, setFormData] = useState<RegisterFormData>({
         username: '',
         email: '',
@@ -19,17 +18,17 @@ export default function RegisterForm({ onRegister, onSwitchToLogin, error }: Reg
         confirmPassword: ''
     });
 
-    const authService = new AuthService(process.env.DATABASE_URL || 'http://localhost:3001/api');
     const router = useRouter();
-    
+    const { register } = useAuth()
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try{
-            const response = await authService.register(formData.username, formData.email, formData.password, formData.confirmPassword);    
-            localStorage.setItem('token', response.token);
-            onRegister({ username: formData.username, email: formData.email, password: formData.password, confirmPassword: formData.confirmPassword });
+        try {
+            const response: any = await register(formData)
+
+            localStorage.setItem('token', response.token)
             router.push('/dashboard');
-        }catch(err){
+        } catch (err) {
             console.error(err);
         }
     };
