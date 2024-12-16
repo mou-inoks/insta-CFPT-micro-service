@@ -101,6 +101,7 @@ npx prisma generate
 
 
 ## Tree 
+```bash
 .
 ├── README.md
 ├── READMEOLD.md
@@ -209,7 +210,7 @@ npx prisma generate
 ├── prometheus
 │   └── prometheus.yml
 └── yarn.lock
-
+```
 ---
 
 Si vous rencontrez des problèmes, assurez-vous que les services Docker sont bien démarrés et que vos fichiers `.env` sont correctement configurés.
