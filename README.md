@@ -9,43 +9,96 @@ Assurez-vous d'avoir installé les éléments suivants sur votre machine :
 
 ## Instructions pour démarrer
 
-**1. Clonez le dépôt :**
+### 1. Clonez le dépôt
 
-  ```bash
-   git clone git@gitlab.ictge.ch:theo-rbb/insta-cfpt.git
-   cd insta-cfpt
-  ```
-
-**2. Créer les fichiers .env :**
-
-Backend:
 ```bash
+git clone https://github.com/mou-inoks/insta-CFPT-micro-service.git
+cd insta-cfpt
+```
+
+### 2. Créer les fichiers `.env`
+
+#### Backend
+Créez un fichier `.env` dans le répertoire backend avec le contenu suivant :
+```env
 DATABASE_URL=mysql://root:super@mariadb:3306/instacfpt2
 JWT_SECRET=mysecret
 JWT_EXPIRES_IN=7d
 ```
 
-Frontend:
-```bash
+#### Frontend
+Créez un fichier `.env` dans le répertoire frontend avec le contenu suivant :
+```env
 VITE_BACKEND_BASE_URL=http://127.0.0.1:9000
 VITE_BACKEND_API_URL=http://127.0.0.1:9000/api/v1
 ```
 
-**3. Lancer le projet avec docker compose :**
-  ```bash
-   docker-compose up --build
-  ```
+### 3. Configurer Traefik (Load Balancing)
 
-**4. Lancer les migrations :**
-  - Se connecter en interactive au container et lancer la commande :
-  ```npx prisma migrate deploy```
+Traefik est configuré pour router les requêtes vers les services correspondants. Assurez-vous que les labels sont bien définis dans le fichier `docker-compose.yml`. Voici un exemple pour le backend :
+```yaml
+labels:
+  - "traefik.enable=true"
+  - "traefik.http.routers.backend.rule=Host(`api.insta.cfpt.info`)"
+  - "traefik.http.routers.backend.entrypoints=web"
+```
 
+Si vous souhaitez tester le hostname `api.insta.cfpt.info` en local, ajoutez la ligne suivante à votre fichier `hosts` :
+- **Windows** : `C:\Windows\System32\drivers\etc\hosts`
+- **macOS/Linux** : `/etc/hosts`
 
-## Accédez à l’application
+```plaintext
+127.0.0.1  api.insta.cfpt.info
+```
+
+Redémarrez ensuite Docker avec :
+```bash
+docker-compose down && docker-compose up --build
+```
+
+### 4. Lancer le projet avec Docker Compose
+
+Pour démarrer tous les services, exécutez la commande suivante :
+```bash
+docker-compose up --build
+```
+
+### 5. Lancer les migrations Prisma
+
+Connectez-vous au conteneur backend et exécutez les migrations Prisma :
+```bash
+docker exec -it <nom-du-container-backend> npx prisma migrate deploy
+```
+
+### 6. Configurer le monitoring (Prometheus et Grafana)
+
+1. **Prometheus** collecte les métriques des services. La configuration est gérée dans le fichier `prometheus.yml`.
+2. **Grafana** affiche les métriques sous forme de graphiques. Vous pouvez accéder à Grafana via : [http://localhost:3001](http://localhost:3001).
+
+Pour ajouter un dashboard Grafana :
+- Connectez-vous à l'interface Grafana.
+- Importez un dashboard à partir d'un ID préexistant (par exemple, 1860 pour Docker).
+
+### 7. Accédez à l’application
+
 - **Frontend** : [http://localhost:3000](http://localhost:3000)
 - **Backend** : [http://localhost:9000](http://localhost:9000)
 
-## Prisma
-- **Create Migration** : npx prisma migrate dev --name your-migration-name
-- **Run Migration** : npx prisma migrate deploy
-- **Generate TS Interface** npx prisma generate
+## Prisma : commandes utiles
+
+- **Créer une migration** :
+```bash
+npx prisma migrate dev --name your-migration-name
+```
+- **Exécuter les migrations** :
+```bash
+npx prisma migrate deploy
+```
+- **Générer les interfaces TypeScript** :
+```bash
+npx prisma generate
+```
+
+---
+
+Si vous rencontrez des problèmes, assurez-vous que les services Docker sont bien démarrés et que vos fichiers `.env` sont correctement configurés.
