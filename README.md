@@ -99,6 +99,117 @@ npx prisma migrate deploy
 npx prisma generate
 ```
 
+
+## Tree 
+.
+├── README.md
+├── READMEOLD.md
+├── backend
+│   ├── dockerfile
+│   ├── nodemon.json
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── prisma
+│   │   └── schema.prisma
+│   ├── src
+│   │   ├── @types
+│   │   │   └── express.d.ts
+│   │   ├── config
+│   │   │   └── serverConfig.ts
+│   │   ├── controllers
+│   │   │   ├── controller.ts
+│   │   │   └── rabbitmqController.ts
+│   │   ├── index.ts
+│   │   ├── routes
+│   │   │   ├── auth
+│   │   │   │   ├── authRoutes.ts
+│   │   │   │   └── authService.ts
+│   │   │   ├── posts
+│   │   │   │   ├── postRoutes.ts
+│   │   │   │   └── postService.ts
+│   │   │   ├── rabbitMq
+│   │   │   │   ├── rabbitmqConsumer.ts
+│   │   │   │   └── rabbitmqService.ts
+│   │   │   ├── routes.ts
+│   │   │   ├── upload
+│   │   │   │   ├── uploadController.ts
+│   │   │   │   ├── uploadMiddleware.ts
+│   │   │   │   ├── uploadRoutes.ts
+│   │   │   │   └── uploadServices.ts
+│   │   │   └── users
+│   │   │       ├── userRoutes.ts
+│   │   │       └── userServices.ts
+│   │   ├── server.ts
+│   │   └── utils
+│   │       └── prismaClient.ts
+│   ├── tsconfig.json
+│   └── yarn.lock
+├── db
+│   └── mariadb.sql
+├── docker-compose.yml
+├── frontend
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── components.json
+│   ├── next.config.ts
+│   ├── package.json
+│   ├── postcss.config.mjs
+│   ├── public
+│   │   ├── file.svg
+│   │   ├── globe.svg
+│   │   ├── next.svg
+│   │   ├── vercel.svg
+│   │   └── window.svg
+│   ├── src
+│   │   ├── app
+│   │   │   ├── dashboard
+│   │   │   │   └── page.tsx
+│   │   │   ├── favicon.ico
+│   │   │   ├── fonts
+│   │   │   │   ├── GeistMonoVF.woff
+│   │   │   │   └── GeistVF.woff
+│   │   │   ├── globals.css
+│   │   │   ├── layout.tsx
+│   │   │   ├── login
+│   │   │   │   └── page.tsx
+│   │   │   ├── page.tsx
+│   │   │   └── register
+│   │   │       └── page.tsx
+│   │   ├── components
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── LoginForm.tsx
+│   │   │   ├── RegisterForm.tsx
+│   │   │   ├── postForm.tsx
+│   │   │   ├── postList.tsx
+│   │   │   └── ui
+│   │   │       ├── avatar.tsx
+│   │   │       ├── button.tsx
+│   │   │       ├── card.tsx
+│   │   │       ├── dialog.tsx
+│   │   │       ├── input.tsx
+│   │   │       ├── label.tsx
+│   │   │       ├── scroll-area.tsx
+│   │   │       └── textarea.tsx
+│   │   ├── context
+│   │   │   ├── AuthContext.tsx
+│   │   │   └── PrivateRoute.tsx
+│   │   ├── lib
+│   │   │   └── utils.ts
+│   │   ├── service
+│   │   │   └── postService.ts
+│   │   ├── types
+│   │   │   └── types.ts
+│   │   └── utils
+│   │       └── auth.ts
+│   ├── tailwind.config.ts
+│   ├── tsconfig.json
+│   └── yarn.lock
+├── nginx.conf
+├── prometheus
+│   └── prometheus.yml
+└── yarn.lock
+
 ---
 
 Si vous rencontrez des problèmes, assurez-vous que les services Docker sont bien démarrés et que vos fichiers `.env` sont correctement configurés.
